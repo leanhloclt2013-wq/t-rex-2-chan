@@ -2,18 +2,27 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google T-Rex Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Google T-Rex Game - Nâng Cấp</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="game-container">
         <h1>T-REX CHROME GAME</h1>
         <div id="game">
+            <!-- Hiển thị điểm -->
+            <div id="score">Điểm: 0</div>
+            
+            <!-- Nhân vật chính -->
             <div id="dino"></div>
-            <div id="obstacle"></div>
+            
+            <!-- Chướng ngại vật sẽ được JS thêm vào đây -->
+            <div id="obstacle-container"></div>
+            
+            <!-- Đường nền -->
+            <div class="ground"></div>
         </div>
-        <p class="instructions">Nhấn <strong>Phím Cách (Space)</strong> hoặc <strong>Chạm vào màn hình</strong> để nhảy!</p>
+        <p class="instructions">Ấn <strong>Space</strong> hoặc <strong>Chạm màn hình</strong> để nhảy</p>
     </div>
     <script src="script.js"></script>
 </body>

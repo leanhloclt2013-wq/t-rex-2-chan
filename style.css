@@ -1,0 +1,73 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.game-container {
+    text-align: center;
+}
+
+h1 {
+    color: #535353;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#game {
+    width: 600px;
+    height: 200px;
+    border-bottom: 2px solid #535353;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#dino {
+    width: 30px;
+    height: 30px;
+    background-color: #535353;
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+}
+
+#obstacle {
+    width: 20px;
+    height: 40px;
+    background-color: #ff6b6b;
+    position: absolute;
+    bottom: 0;
+    left: 600px;
+}
+
+.jump {
+    animation: jumpAni 0.5s linear;
+}
+
+@keyframes jumpAni {
+    0% { bottom: 0; }
+    50% { bottom: 100px; }
+    100% { bottom: 0; }
+}
+
+.move {
+    animation: blockAni 1.5s infinite linear;
+}
+
+@keyframes blockAni {
+    0% { left: 600px; }
+    100% { left: -20px; }
+}
+
+.instructions {
+    margin-top: 15px;
+    color: #777;
+    font-size: 14px;
+}

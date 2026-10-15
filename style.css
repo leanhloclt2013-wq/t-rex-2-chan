@@ -1,73 +1,134 @@
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #f7f7f7;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+// Các phần tử DOM
+const dino = document.getElementById("dino");
+const obstacleContainer = document.getElementById("obstacle-container");
+const scoreElement = document.getElementById("score");
+
+// Các biến trạng thái game
+let gameStarted = false;
+let score = 0;
+let scoreInterval;
+let obstacleTimeout;
+const GAME_WIDTH = 800; // Khớp với CSS
+
+// Định nghĩa các loại chướng ngại vật và kích thước (để tính va chạm)
+const obstacleTypes = [
+    { class: 'cactus-short', width: 25, height: 40, bottom: 2 },
+    { class: 'cactus-tall', width: 30, height: 60, bottom: 2 },
+    { class: 'cactus-wide', width: 60, height: 40, bottom: 2 },
+    { class: 'bird-low', width: 35, height: 25, bottom: 30 }, // Bay ngang tầm nhảy
+    { class: 'bird-high', width: 35, height: 25, bottom: 80 } // Bay rất cao
+];
+
+// Hàm thực hiện hành động nhảy
+function jump() {
+    if (!gameStarted) return; // Không cho nhảy khi game chưa bắt đầu
+    
+    if (!dino.classList.contains("jump")) {
+        dino.classList.add("jump");
+        // Thời gian nhảy khớp với CSS (0.6s = 600ms)
+        setTimeout(function () {
+            dino.classList.remove("jump");
+        }, 600);
+    }
 }
 
-.game-container {
-    text-align: center;
+// Hàm bắt đầu game
+function startGame() {
+    if (gameStarted) return;
+    
+    gameStarted = true;
+    score = 0;
+    scoreElement.innerText = "Điểm: 0";
+    document.querySelector('.instructions').innerHTML = "Chơi tiếp...";
+
+    // Bắt đầu tính điểm
+    scoreInterval = setInterval(() => {
+        score++;
+        scoreElement.innerText = "Điểm: " + score;
+    }, 100);
+
+    // Bắt đầu tạo chướng ngại vật
+    spawnObstacle();
 }
 
-h1 {
-    color: #535353;
-    font-size: 24px;
-    margin-bottom: 20px;
+// Hàm kết thúc game
+function gameOver() {
+    gameStarted = false;
+    clearInterval(scoreInterval); // Dừng tính điểm
+    clearTimeout(obstacleTimeout); // Dừng tạo chướng ngại vật mới
+    
+    // Xóa tất cả chướng ngại vật hiện có
+    obstacleContainer.innerHTML = '';
+    
+    alert("GAME OVER! Điểm của bạn là: " + score + "\nẤn OK để chơi lại.");
+    document.querySelector('.instructions').innerHTML = "Ấn <strong>Space</strong> để chơi lại";
 }
 
-#game {
-    width: 600px;
-    height: 200px;
-    border-bottom: 2px solid #535353;
-    position: relative;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+// Hàm tạo ngẫu nhiên chướng ngại vật
+function spawnObstacle() {
+    if (!gameStarted) return;
+
+    // 1. Chọn ngẫu nhiên 1 loại chướng ngại vật
+    const randomIndex = Math.floor(Math.random() * obstacleTypes.length);
+    const type = obstacleTypes[randomIndex];
+
+    // 2. Tạo phần tử DOM
+    const obstacle = document.createElement('div');
+    obstacle.classList.add('obstacle', type.class);
+    obstacleContainer.appendChild(obstacle);
+
+    // 3. Xử lý va chạm cho chướng ngại vật này
+    let checkCollision = setInterval(() => {
+        if (!gameStarted) {
+            clearInterval(checkCollision);
+            return;
+        }
+
+        // Lấy vị trí thực tế của Dino
+        const dinoRect = dino.getBoundingClientRect();
+        // Lấy vị trí thực tế của chướng ngại vật
+        const obstacleRect = obstacle.getBoundingClientRect();
+
+        // Kiểm tra va chạm (Dino chạm vào hình chữ nhật chướng ngại vật)
+        if (
+            dinoRect.right > obstacleRect.left &&
+            dinoRect.left < obstacleRect.right &&
+            dinoRect.bottom > obstacleRect.top &&
+            dinoRect.top < obstacleRect.bottom
+        ) {
+            clearInterval(checkCollision);
+            gameOver();
+        }
+
+        // Nếu chướng ngại vật đã đi qua Dino, xóa nó khỏi DOM để tiết kiệm tài nguyên
+        if (obstacleRect.right < dinoRect.left - 100) {
+            clearInterval(checkCollision);
+            obstacle.remove();
+        }
+    }, 10); // Kiểm tra va chạm mỗi 10ms
+
+    // 4. Thiết lập thời gian ngẫu nhiên để tạo chướng ngại vật tiếp theo (1s - 2.5s)
+    const randomDelay = Math.random() * (2500 - 1000) + 1000;
+    obstacleTimeout = setTimeout(spawnObstacle, randomDelay);
 }
 
-#dino {
-    width: 30px;
-    height: 30px;
-    background-color: #535353;
-    position: absolute;
-    bottom: 0;
-    left: 50px;
-}
+// Bắt sự kiện để bắt đầu và nhảy
+document.addEventListener("keydown", function (event) {
+    if (event.code === "Space" || event.code === "ArrowUp") {
+        event.preventDefault(); // Ngăn cuộn trang
+        if (!gameStarted) {
+            startGame();
+        } else {
+            jump();
+        }
+    }
+});
 
-#obstacle {
-    width: 20px;
-    height: 40px;
-    background-color: #ff6b6b;
-    position: absolute;
-    bottom: 0;
-    left: 600px;
-}
-
-.jump {
-    animation: jumpAni 0.5s linear;
-}
-
-@keyframes jumpAni {
-    0% { bottom: 0; }
-    50% { bottom: 100px; }
-    100% { bottom: 0; }
-}
-
-.move {
-    animation: blockAni 1.5s infinite linear;
-}
-
-@keyframes blockAni {
-    0% { left: 600px; }
-    100% { left: -20px; }
-}
-
-.instructions {
-    margin-top: 15px;
-    color: #777;
-    font-size: 14px;
-}
+// Cho phép chạm màn hình/click chuột để bắt đầu và nhảy
+document.addEventListener("click", function () {
+    if (!gameStarted) {
+        startGame();
+    } else {
+        jump();
+    }
+});

@@ -52,117 +52,79 @@ h1 {
 }
 
 /* ==========================================================
-   1. KHÚNG LONG T-REX SẮC NÉT & CHI TIẾT HƠN
+   HIỂN THỊ KHỦNG LONG T-REX (dino.png)
    ========================================================== */
 #dino {
-    width: 36px;
-    height: 44px;
-    background-color: #ff1493; /* Thân khủng long */
+    width: 48px;
+    height: 48px;
+    background-image: url('dino.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
     position: absolute;
     bottom: 4px;
     left: 50px;
-    border-radius: 6px 12px 4px 8px;
     z-index: 5;
-    box-shadow: -8px 12px 0 -4px #ff1493, 10px 20px 0 -8px #ff1493; /* Tạo chân và đuôi sắc nét */
+    image-rendering: pixelated; /* Giữ độ sắc nét cho ảnh pixel */
     transition: height 0.1s, width 0.1s;
 }
 
-/* Phần đầu và mõm T-Rex */
-#dino::before {
-    content: '';
-    position: absolute;
-    top: -12px;
-    right: -14px;
-    width: 28px;
-    height: 20px;
-    background-color: #ff1493;
-    border-radius: 6px 14px 4px 4px;
-    box-shadow: 0 6px 0 -2px #c71585; /* Tạo hàm dưới nổi bật */
-}
-
-/* Mắt khủng long */
-#dino::after {
-    content: '';
-    position: absolute;
-    top: -8px;
-    right: -2px;
-    width: 5px;
-    height: 5px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 0 0 2px #ff1493;
-}
-
-/* Trạng thái cúi đầu (Duck) sắc nét */
+/* Trạng thái cúi đầu (co nhỏ chiều cao khủng long lại) */
 .duck {
-    height: 26px !important;
-    width: 50px !important;
+    height: 30px !important;
+    width: 54px !important;
     bottom: 4px !important;
-    border-radius: 6px 10px 4px 6px !important;
-    box-shadow: -10px 8px 0 -4px #ff1493, 14px 10px 0 -6px #ff1493 !important;
-}
-.duck::before {
-    top: -8px !important;
-    right: -10px !important;
-    width: 24px !important;
-    height: 15px !important;
 }
 
 
 /* ==========================================================
-   2. XƯƠNG RỒNG VÀ CHIM SẮC NÉT HƠN
+   HIỂN THỊ CHƯỚNG NGẠI VẬT (Xương rồng & Chim)
    ========================================================== */
 .obstacle {
     position: absolute;
     bottom: 4px;
     z-index: 4;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    image-rendering: pixelated;
 }
 
-/* Xương rồng thấp (Gai nhọn, chi tiết góc cạnh) */
+/* Xương rồng thấp */
 .cactus-short {
-    width: 24px;
+    width: 28px;
     height: 42px;
-    background-color: #2e7d32;
-    border-radius: 4px 4px 2px 2px;
-    box-shadow: -8px 10px 0 -4px #2e7d32, 8px 12px 0 -4px #2e7d32, 0 -6px 0 -2px #1b5e20;
+    background-image: url('cactus.png');
 }
 
-/* Xương rồng cao (Thân trụ thanh mảnh, nhánh rõ ràng) */
+/* Xương rồng cao */
 .cactus-tall {
-    width: 24px;
-    height: 62px;
-    background-color: #1b5e20;
-    border-radius: 4px 4px 2px 2px;
-    box-shadow: -10px 14px 0 -4px #1b5e20, 10px 10px 0 -4px #2e7d32, 0 -8px 0 -2px #388e3c;
+    width: 32px;
+    height: 64px;
+    background-image: url('cactus.png');
 }
 
-/* Xương rồng rộng (Cụm nhiều thân) */
+/* Xương rồng rộng */
 .cactus-wide {
-    width: 56px;
-    height: 44px;
-    background-color: #388e3c;
-    border-radius: 6px 6px 2px 2px;
-    box-shadow: 18px 4px 0 0 #2e7d32, -16px 10px 0 -4px #1b5e20, 8px -6px 0 -2px #2e7d32;
+    width: 58px;
+    height: 45px;
+    background-image: url('cactus.png');
 }
 
-/* Chim bay thấp (Cánh sắc nét, màu xám khói) */
+/* Chim bay thấp (Dùng ảnh bird.png) */
 .bird-low {
-    width: 40px;
-    height: 22px;
-    background-color: #4a4a4a;
-    border-radius: 50% 50% 20% 20%;
+    width: 44px;
+    height: 32px;
+    background-image: url('bird.png');
     bottom: 48px;
-    box-shadow: 0 6px 0 -2px #2b2b2b;
 }
 
-/* Chim bay cao (Màu đỏ sinh động) */
+/* Chim bay cao */
 .bird-high {
-    width: 40px;
-    height: 22px;
-    background-color: #d32f2f;
-    border-radius: 50% 50% 20% 20%;
+    width: 44px;
+    height: 32px;
+    background-image: url('bird.png');
     bottom: 105px;
-    box-shadow: 0 6px 0 -2px #8b0000;
 }
 
 /* Hiệu ứng nhảy */

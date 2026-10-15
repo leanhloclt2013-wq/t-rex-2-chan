@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #ffe6f0; /* Nền hồng pastel */
+    background-color: #ffe6f0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
@@ -27,7 +27,7 @@ h1 {
     height: 250px;
     position: relative;
     overflow: hidden;
-    background: #fff0f5; /* Nền khung game hồng nhạt */
+    background: #fff0f5;
     border: 3px solid #ffb6c1;
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(214, 51, 132, 0.15);
@@ -51,98 +51,109 @@ h1 {
     bottom: 0;
 }
 
-/* ==========================================================
-   1. THIẾT KẾ KHÚNG LONG T-REX MỚI (Hình dáng chú khủng long)
-   ================================================---------- */
+/* ================= THIẾT KẾ KHÚNG LONG T-REX (CHI TIẾT HƠN) ================= */
 #dino {
-    width: 36px;
+    width: 38px;
     height: 46px;
-    background-color: #ff1493; /* Thân khủng long màu hồng đậm */
+    background-color: #ff1493; /* Thân khủng long hồng đậm */
     position: absolute;
     bottom: 4px;
     left: 50px;
-    border-radius: 12px 14px 4px 4px;
+    border-radius: 10px 14px 4px 6px;
     z-index: 5;
+    transition: height 0.1s, width 0.1s; /* Chuyển động mượt khi cúi */
 }
 
-/* Đầu và mõm khủng long */
+/* Phần đầu khủng long */
 #dino::before {
     content: '';
     position: absolute;
-    top: -12px;
-    right: -10px;
-    width: 24px;
-    height: 20px;
+    top: -14px;
+    right: -12px;
+    width: 26px;
+    height: 22px;
     background-color: #ff1493;
-    border-radius: 6px 12px 4px 4px;
+    border-radius: 6px 14px 4px 4px;
 }
 
 /* Mắt khủng long */
 #dino::after {
     content: '';
     position: absolute;
-    top: -8px;
+    top: -10px;
     right: -2px;
-    width: 4px;
-    height: 4px;
+    width: 5px;
+    height: 5px;
     background-color: #ffffff;
     border-radius: 50%;
-    box-shadow: 0 0 0 2px #ff1493; /* Tạo điểm nhấn viền mắt */
+    box-shadow: 0 0 0 2px #ff1493;
+}
+
+/* Trạng thái Cúi đầu (Duck) */
+.duck {
+    height: 26px !important;
+    width: 48px !important;
+    bottom: 4px !important;
+    border-radius: 8px 10px 4px 4px !important;
+}
+.duck::before {
+    top: -8px !important;
+    right: -8px !important;
+    width: 22px !important;
+    height: 16px !important;
 }
 
 
-/* ==========================================================
-   2. THIẾT KẾ CHƯỚNG NGẠI VẬT (Xương rồng và Chim)
-   ================================================---------- */
+/* ================= THIẾT KẾ CHƯỚNG NGẠI VẬT ================= */
 .obstacle {
     position: absolute;
     bottom: 4px;
     z-index: 4;
 }
 
-/* Xương rồng thấp (Có các nhánh phụ hai bên) */
+/* Xương rồng thấp (Gai góc, sinh động) */
 .cactus-short {
-    width: 22px;
-    height: 38px;
+    width: 24px;
+    height: 40px;
     background-color: #2e7d32;
     border-radius: 6px 6px 2px 2px;
-    box-shadow: -8px 10px 0 -4px #2e7d32, 8px 14px 0 -4px #2e7d32; /* Tạo nhánh xương rồng */
+    box-shadow: -8px 10px 0 -4px #2e7d32, 8px 14px 0 -4px #2e7d32, -4px 22px 0 -6px #1b5e20;
 }
 
-/* Xương rồng cao (Thân trụ cao và nhiều nhánh) */
+/* Xương rồng cao */
 .cactus-tall {
-    width: 24px;
-    height: 58px;
+    width: 26px;
+    height: 62px;
     background-color: #1b5e20;
     border-radius: 6px 6px 2px 2px;
-    box-shadow: -10px 14px 0 -4px #1b5e20, 10px 8px 0 -4px #1b5e20;
+    box-shadow: -10px 14px 0 -4px #1b5e20, 10px 10px 0 -4px #2e7d32;
 }
 
-/* Xương rồng rộng (Cụm xương rồng mọc sát nhau) */
+/* Xương rồng rộng */
 .cactus-wide {
-    width: 50px;
+    width: 55px;
     height: 42px;
     background-color: #388e3c;
     border-radius: 8px 8px 2px 2px;
-    box-shadow: 18px 4px 0 0 #2e7d32; /* Thêm một cụm bên cạnh */
+    box-shadow: 18px 6px 0 0 #2e7d32, -14px 12px 0 -4px #1b5e20;
 }
 
-/* Chim bay thấp */
+/* Chim bay thấp (Cần nhảy qua) */
 .bird-low {
-    width: 36px;
-    height: 20px;
+    width: 38px;
+    height: 22px;
     background-color: #4a4a4a;
     border-radius: 50% 50% 10% 10%;
-    bottom: 45px;
+    bottom: 48px;
 }
 
-/* Chim bay cao */
+/* Chim bay cao (Cần cúi đầu để né) */
 .bird-high {
-    width: 36px;
-    height: 20px;
+    width: 38px;
+    height: 22px;
     background-color: #d32f2f;
     border-radius: 50% 50% 10% 10%;
-    bottom: 95px;
+    bottom: 105px; 
 }
 
 /* Hiệu ứng nhảy */
@@ -160,6 +171,6 @@ h1 {
 .instructions {
     margin-top: 15px;
     color: #ad1457;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
 }

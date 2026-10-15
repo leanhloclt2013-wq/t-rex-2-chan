@@ -1,129 +1,141 @@
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #f7f7f7;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden; /* Ngăn cuộn trang */
+const dino = document.getElementById("dino");
+const obstacleContainer = document.getElementById("obstacle-container");
+const scoreElement = document.getElementById("score");
+
+let gameStarted = false;
+let score = 0;
+let scoreInterval;
+let obstacleTimeout;
+let gameLoopId;
+
+// Danh sách các loại chướng ngại vật
+const obstacleTypes = [
+    { class: 'cactus-short', width: 25, height: 40 },
+    { class: 'cactus-tall', width: 28, height: 65 },
+    { class: 'cactus-wide', width: 55, height: 42 },
+    { class: 'bird-low', width: 38, height: 24 },
+    { class: 'bird-high', width: 38, height: 24 }
+];
+
+// Hàm nhảy
+function jump() {
+    if (!gameStarted) return;
+    if (!dino.classList.contains("jump")) {
+        dino.classList.add("jump");
+        setTimeout(function () {
+            dino.classList.remove("jump");
+        }, 550);
+    }
 }
 
-.game-container {
-    text-align: center;
+// Bắt đầu trò chơi
+function startGame() {
+    if (gameStarted) return;
+    
+    gameStarted = true;
+    score = 0;
+    scoreElement.innerText = "Điểm: 0";
+    obstacleContainer.innerHTML = ''; // Xóa chướng ngại vật cũ nếu có
+    document.querySelector('.instructions').innerHTML = "Bấm <strong>Space</strong> hoặc <strong>Chạm màn hình</strong> để nhảy!";
+
+    // Tính điểm
+    scoreInterval = setInterval(() => {
+        score++;
+        scoreElement.innerText = "Điểm: " + score;
+    }, 100);
+
+    // Bắt đầu tạo chướng ngại vật
+    spawnObstacle();
+
+    // Vòng lặp cập nhật chuyển động và va chạm
+    gameLoopId = requestAnimationFrame(updateGame);
 }
 
-h1 {
-    color: #535353;
-    font-size: 24px;
-    margin-bottom: 20px;
+// Thua game
+function gameOver() {
+    gameStarted = false;
+    clearInterval(scoreInterval);
+    clearTimeout(obstacleTimeout);
+    cancelAnimationFrame(gameLoopId);
+    
+    setTimeout(() => {
+        alert("GAME OVER!\nĐiểm số của bạn: " + score + "\nẤn OK để chơi lại.");
+        document.querySelector('.instructions').innerHTML = "Ấn <strong>Space</strong> hoặc <strong>Chạm</strong> để chơi lại";
+    }, 50);
 }
 
-#game {
-    width: 800px; /* Tăng độ rộng game */
-    height: 250px; /* Tăng độ cao game */
-    border-bottom: 2px solid #535353;
-    position: relative;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+// Tạo chướng ngại vật ngẫu nhiên
+function spawnObstacle() {
+    if (!gameStarted) return;
+
+    const randomIndex = Math.floor(Math.random() * obstacleTypes.length);
+    const type = obstacleTypes[randomIndex];
+
+    const obstacle = document.createElement('div');
+    obstacle.classList.add('obstacle', type.class);
+    obstacle.style.left = '800px'; // Xuất hiện từ rìa phải
+    obstacleContainer.appendChild(obstacle);
+
+    // Hẹn giờ tạo chướng ngại vật tiếp theo (từ 1.2s đến 2.5s)
+    const randomDelay = Math.random() * 1300 + 1200;
+    obstacleTimeout = setTimeout(spawnObstacle, randomDelay);
 }
 
-#score {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 20px;
-    color: #535353;
-    font-weight: bold;
-    z-index: 10;
+// Cập nhật vị trí tất cả chướng ngại vật & kiểm tra va chạm
+function updateGame() {
+    if (!gameStarted) return;
+
+    const obstacles = document.querySelectorAll('.obstacle');
+    const dinoRect = dino.getBoundingClientRect();
+
+    obstacles.forEach(obstacle => {
+        let currentLeft = parseFloat(obstacle.style.left);
+        let speed = 6 + Math.floor(score / 50); // Tăng tốc độ dần theo điểm
+
+        currentLeft -= speed;
+        obstacle.style.left = currentLeft + 'px';
+
+        // Kiểm tra va chạm bằng thuật toán AABB (Bounding Box)
+        const obstacleRect = obstacle.getBoundingClientRect();
+        
+        // Thu nhỏ khung va chạm 5px để tính chính xác hơn
+        if (
+            dinoRect.right - 5 > obstacleRect.left &&
+            dinoRect.left + 5 < obstacleRect.right &&
+            dinoRect.bottom - 5 > obstacleRect.top &&
+            dinoRect.top + 5 < obstacleRect.bottom
+        ) {
+            gameOver();
+        }
+
+        // Xóa chướng ngại vật khi ra khỏi màn hình bên trái
+        if (currentLeft < -60) {
+            obstacle.remove();
+        }
+    });
+
+    if (gameStarted) {
+        requestAnimationFrame(updateGame);
+    }
 }
 
-.ground {
-    width: 100%;
-    height: 2px;
-    background-color: #535353;
-    position: absolute;
-    bottom: 0;
-}
+// Lắng nghe phím Space / Mũi tên lên
+document.addEventListener("keydown", function (event) {
+    if (event.code === "Space" || event.code === "ArrowUp") {
+        event.preventDefault();
+        if (!gameStarted) {
+            startGame();
+        } else {
+            jump();
+        }
+    }
+});
 
-#dino {
-    width: 40px;
-    height: 40px;
-    background-color: #535353; /* Khủng long màu xám */
-    position: absolute;
-    bottom: 2px;
-    left: 50px;
-    border-radius: 4px; /* Bo góc nhẹ */
-}
-
-/* Các loại chướng ngại vật chung */
-.obstacle {
-    position: absolute;
-    bottom: 2px; /* Mặc định sát đất */
-    animation: moveObstacle 1.8s infinite linear; /* Thời gian di chuyển */
-}
-
-/* 1. Xương rồng thấp */
-.cactus-short {
-    width: 25px;
-    height: 40px;
-    background-color: #1a7f37;
-}
-
-/* 2. Xương rồng cao */
-.cactus-tall {
-    width: 30px;
-    height: 60px;
-    background-color: #1a7f37;
-}
-
-/* 3. Xương rồng rộng */
-.cactus-wide {
-    width: 60px;
-    height: 40px;
-    background-color: #1a7f37;
-}
-
-/* 4. Chim bay thấp */
-.bird-low {
-    width: 35px;
-    height: 25px;
-    background-color: #cf222e; /* Màu đỏ */
-    border-radius: 50%; /* Hình chim tròn */
-    bottom: 30px; /* Bay ngang tầm nhảy của Dino */
-}
-
-/* 5. Chim bay cao */
-.bird-high {
-    width: 35px;
-    height: 25px;
-    background-color: #cf222e;
-    border-radius: 50%;
-    bottom: 80px; /* Bay rất cao, không cần nhảy */
-}
-
-/* Animation cho Dino nhảy */
-.jump {
-    animation: jumpAni 0.6s linear; /* Thời gian nhảy */
-}
-
-@keyframes jumpAni {
-    0% { bottom: 2px; }
-    30% { bottom: 120px; } /* Đỉnh nhảy */
-    70% { bottom: 120px; } /* Giữ trên cao một chút */
-    100% { bottom: 2px; }
-}
-
-/* Animation cho chướng ngại vật di chuyển từ phải sang trái */
-@keyframes moveObstacle {
-    0% { left: 850px; } /* Bắt đầu ngoài màn hình bên phải */
-    100% { left: -70px; } /* Kết thúc ngoài màn hình bên trái */
-}
-
-.instructions {
-    margin-top: 15px;
-    color: #777;
-    font-size: 14px;
-}
+// Lắng nghe thao tác Click / Chạm màn hình
+document.addEventListener("click", function () {
+    if (!gameStarted) {
+        startGame();
+    } else {
+        jump();
+    }
+});

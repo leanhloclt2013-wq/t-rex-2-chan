@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #ffe6f0; /* Nền ngoài hồng nhạt */
+    background-color: #ffe6f0; /* Nền hồng pastel */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
@@ -15,7 +15,7 @@ body {
 }
 
 h1 {
-    color: #d63384; /* Chữ màu hồng đậm */
+    color: #d63384;
     font-size: 26px;
     margin-bottom: 15px;
     text-transform: uppercase;
@@ -27,7 +27,7 @@ h1 {
     height: 250px;
     position: relative;
     overflow: hidden;
-    background: #fff0f5; /* Nền khung game màu hồng kem */
+    background: #fff0f5; /* Nền khung game hồng nhạt */
     border: 3px solid #ffb6c1;
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(214, 51, 132, 0.15);
@@ -46,85 +46,106 @@ h1 {
 .ground {
     width: 100%;
     height: 4px;
-    background-color: #d63384; /* Đường mặt đất màu hồng */
+    background-color: #d63384;
     position: absolute;
     bottom: 0;
 }
 
-/* KHỦNG LONG MÀU HỒNG */
+/* ==========================================================
+   1. THIẾT KẾ KHÚNG LONG T-REX MỚI (Hình dáng chú khủng long)
+   ================================================---------- */
 #dino {
-    width: 40px;
-    height: 44px;
-    background-color: #ff1493; /* Khủng long màu hồng đậm (Hot Pink) */
+    width: 36px;
+    height: 46px;
+    background-color: #ff1493; /* Thân khủng long màu hồng đậm */
     position: absolute;
     bottom: 4px;
     left: 50px;
-    border-radius: 8px 12px 4px 4px;
+    border-radius: 12px 14px 4px 4px;
     z-index: 5;
 }
 
-/* Đôi mắt nhỏ cho khủng long thêm dễ thương */
+/* Đầu và mõm khủng long */
+#dino::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    right: -10px;
+    width: 24px;
+    height: 20px;
+    background-color: #ff1493;
+    border-radius: 6px 12px 4px 4px;
+}
+
+/* Mắt khủng long */
 #dino::after {
     content: '';
     position: absolute;
-    top: 6px;
-    right: 8px;
-    width: 6px;
-    height: 6px;
+    top: -8px;
+    right: -2px;
+    width: 4px;
+    height: 4px;
     background-color: #ffffff;
     border-radius: 50%;
+    box-shadow: 0 0 0 2px #ff1493; /* Tạo điểm nhấn viền mắt */
 }
 
-/* Định dạng chung cho chướng ngại vật */
+
+/* ==========================================================
+   2. THIẾT KẾ CHƯỚNG NGẠI VẬT (Xương rồng và Chim)
+   ================================================---------- */
 .obstacle {
     position: absolute;
     bottom: 4px;
     z-index: 4;
 }
 
-/* 1. Xương rồng thấp */
+/* Xương rồng thấp (Có các nhánh phụ hai bên) */
 .cactus-short {
-    width: 25px;
-    height: 40px;
+    width: 22px;
+    height: 38px;
     background-color: #2e7d32;
-    border-radius: 4px 4px 0 0;
+    border-radius: 6px 6px 2px 2px;
+    box-shadow: -8px 10px 0 -4px #2e7d32, 8px 14px 0 -4px #2e7d32; /* Tạo nhánh xương rồng */
 }
 
-/* 2. Xương rồng cao */
+/* Xương rồng cao (Thân trụ cao và nhiều nhánh) */
 .cactus-tall {
-    width: 28px;
-    height: 65px;
+    width: 24px;
+    height: 58px;
     background-color: #1b5e20;
-    border-radius: 4px 4px 0 0;
+    border-radius: 6px 6px 2px 2px;
+    box-shadow: -10px 14px 0 -4px #1b5e20, 10px 8px 0 -4px #1b5e20;
 }
 
-/* 3. Xương rồng rộng */
+/* Xương rồng rộng (Cụm xương rồng mọc sát nhau) */
 .cactus-wide {
-    width: 55px;
+    width: 50px;
     height: 42px;
     background-color: #388e3c;
-    border-radius: 4px 4px 0 0;
+    border-radius: 8px 8px 2px 2px;
+    box-shadow: 18px 4px 0 0 #2e7d32; /* Thêm một cụm bên cạnh */
 }
 
-/* 4. Chim bay thấp (Màu xám/đen) */
+/* Chim bay thấp */
 .bird-low {
-    width: 38px;
-    height: 24px;
+    width: 36px;
+    height: 20px;
     background-color: #4a4a4a;
-    border-radius: 50% 50% 20% 20%;
-    bottom: 45px; /* Bay ngang tầm nhảy */
+    border-radius: 50% 50% 10% 10%;
+    bottom: 45px;
 }
 
-/* 5. Chim bay cao */
+/* Chim bay cao */
 .bird-high {
-    width: 38px;
-    height: 24px;
+    width: 36px;
+    height: 20px;
     background-color: #d32f2f;
-    border-radius: 50% 50% 20% 20%;
-    bottom: 95px; /* Bay cao không cần nhảy */
+    border-radius: 50% 50% 10% 10%;
+    bottom: 95px;
 }
 
-/* Animation nhảy cho Dino */
+/* Hiệu ứng nhảy */
 .jump {
     animation: jumpAni 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
